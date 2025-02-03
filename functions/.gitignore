@@ -20,6 +20,8 @@ firebase-debug.*.log
 
 # Service account
 src/config/on-premise-dcd8f-firebase-adminsdk.json
+src/config/serviceAccount.json
+src/config/*-firebase-adminsdk*.json
 !package.json
 !package-lock.json
 !tsconfig.json
