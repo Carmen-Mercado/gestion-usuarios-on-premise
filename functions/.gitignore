@@ -1,0 +1,28 @@
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+lib/
+
+# Logs
+*.log
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Service account
+src/config/on-premise-dcd8f-firebase-adminsdk.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+# Firebase
+.firebase/ 
