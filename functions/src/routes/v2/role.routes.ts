@@ -1,0 +1,19 @@
+import { Router } from 'express';
+import { RoleControllerV2 } from '../../controllers/v2/role.controller';
+
+const router = Router();
+const roleController = new RoleControllerV2();
+
+// Role management
+router.post('/', (req, res) => roleController.createRole(req, res));
+router.get('/', (req, res) => roleController.getAllRoles(req, res));
+router.get('/:id', (req, res) => roleController.getRole(req, res));
+router.put('/:id', (req, res) => roleController.updateRole(req, res));
+router.delete('/:id', (req, res) => roleController.deleteRole(req, res));
+
+// User role management
+router.get('/users/:userId', (req, res) => roleController.getUserRoles(req, res));
+router.post('/users/:userId', (req, res) => roleController.assignRolesToUser(req, res));
+router.get('/users/:userId/permissions', (req, res) => roleController.getUserPermissions(req, res));
+
+export default router; 
