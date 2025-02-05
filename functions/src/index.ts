@@ -11,18 +11,13 @@ dotenv.config();
 
 const app = express();
 
-// Middleware to log all requests
-app.use((req: Request, _res: Response, next: NextFunction) => {
-  logger.info("Request received:", {
-    method: req.method,
-    path: req.path,
-    query: req.query,
-    body: req.body
-  });
-  next();
-});
-
-// Middleware para parsear JSON
+// Middleware - allow all origins with more permissive CORS settings
+app.use(cors({ 
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes - Note: remove the /api prefix since it's added by Firebase
@@ -30,8 +25,18 @@ app.use('/users', userRoutes);
 // Use versioned routes
 app.use('/', versionedRoutes); // This will handle all versioned routes
 
-// Export the Express app as a Firebase Cloud Function
-export const api = onRequest({
-  cors: true,
-  maxInstances: 10
-}, app); 
+// Export the Express app as a Firebase Cloud Function with public access
+export const api = functions
+  .runWith(functionConfig)
+  .https.onRequest((req, res) => {
+    // Add proper error handling for OPTIONS requests
+    if (req.method === 'OPTIONS') {
+      res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+      res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.set('Access-Control-Max-Age', '3600');
+      res.status(204).send('');
+      return;
+    }
+    
+    return app(req, res);
+  });
